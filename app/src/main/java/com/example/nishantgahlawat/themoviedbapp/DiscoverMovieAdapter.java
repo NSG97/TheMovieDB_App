@@ -44,12 +44,12 @@ public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdap
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(dy>0){
-                    final int visibleThresold = 2;
+                    final int visibleThresold = 4;
 
                     int lastItem = gridLayoutManager.findLastCompletelyVisibleItemPosition();
                     int currentTotalCount = gridLayoutManager.getItemCount();
 
-                    if(currentTotalCount<=lastItem+visibleThresold){
+                    if(!isLoading && currentTotalCount<=lastItem+visibleThresold){
                         if(onLoadMoreListener!=null){
                             onLoadMoreListener.onLoadMoreDiscoverMovies();
                         }
@@ -69,8 +69,6 @@ public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdap
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.discover_movie_item,parent,false);
         return new DiscoverMovieViewHolder(itemView);
     }
-
-    /*something*/
 
     @Override
     public void onBindViewHolder(DiscoverMovieViewHolder holder, int position) {

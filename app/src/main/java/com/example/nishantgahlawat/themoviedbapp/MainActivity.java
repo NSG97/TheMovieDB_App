@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverMovieAdap
     RecyclerView mRecyclerView;
     ArrayList<DiscoverMovieResponse.DiscoverMovie> mDiscoverMovies;
     DiscoverMovieAdapter mAdapter;
+    ProgressBar mProgressBar;
 
     private int page=0;
     private int total_pages;
@@ -54,12 +56,17 @@ public class MainActivity extends AppCompatActivity implements DiscoverMovieAdap
         mAdapter = new DiscoverMovieAdapter(mRecyclerView,mDiscoverMovies,this);
         mRecyclerView.setAdapter(mAdapter);
 
+        mProgressBar = (ProgressBar)findViewById(R.id.mainProgressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         loadInitialDiscoverPage();
 
         mAdapter.setOnLoadMoreListener(this);
     }
 
     private void loadInitialDiscoverPage() {
+        mProgressBar.setVisibility(View.VISIBLE);
+
         Retrofit retrofit = AbstractAPI.getRetrofitInstance();
 
         APIInterface apiInterface = retrofit.create(APIInterface.class);
@@ -72,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements DiscoverMovieAdap
                 DiscoverMovieResponse movieResponse = response.body();
                 total_pages=movieResponse.getTotal_pages();
                 mDiscoverMovies.addAll(movieResponse.getResults());
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeInserted(0,mDiscoverMovies.size());
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -84,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements DiscoverMovieAdap
     @Override
     public void onLoadMoreDiscoverMovies() {
         if(page<=total_pages){
+            mProgressBar.setVisibility(View.VISIBLE);
+
             Retrofit retrofit = AbstractAPI.getRetrofitInstance();
 
             APIInterface apiInterface = retrofit.create(APIInterface.class);
@@ -98,7 +108,10 @@ public class MainActivity extends AppCompatActivity implements DiscoverMovieAdap
                     int positionStart = mDiscoverMovies.size();
 
                     mDiscoverMovies.addAll(movieResponse.getResults());
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyItemRangeInserted(positionStart,movieResponse.getResults().size());
+                    mAdapter.setLoaded();
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override

@@ -70,6 +70,8 @@ public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdap
         return new DiscoverMovieViewHolder(itemView);
     }
 
+    /*something*/
+
     @Override
     public void onBindViewHolder(DiscoverMovieViewHolder holder, int position) {
         DiscoverMovieResponse.DiscoverMovie discoverMovie = discoverMovies.get(position);

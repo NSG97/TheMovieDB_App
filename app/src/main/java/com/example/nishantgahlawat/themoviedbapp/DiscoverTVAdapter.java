@@ -3,39 +3,35 @@ package com.example.nishantgahlawat.themoviedbapp;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
-import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
+import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverTVResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 /**
- * Created by Nishant Gahlawat on 14-07-2017.
+ * Created by Nishant Gahlawat on 16-07-2017.
  */
 
-public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdapter.DiscoverMovieViewHolder> {
+public class DiscoverTVAdapter extends RecyclerView.Adapter<DiscoverTVAdapter.DiscoverTVViewHolder> {
 
-    public static final String TAG = "DiscoverMovieAdapterTAG";
+    public static final String TAG = "DiscoverTVAdapterTAG";
     public static final String imageBaseURL = "https://image.tmdb.org/t/p/w500";
 
-    private ArrayList<DiscoverMovieResponse.DiscoverMovie> discoverMovies;
+    private ArrayList<DiscoverTVResponse.DiscoverTV> discoverTVs;
     private Context mContext;
 
     private OnLoadMoreListener onLoadMoreListener;
     private boolean isLoading;
 
-    public DiscoverMovieAdapter(RecyclerView recyclerView,
-                                ArrayList<DiscoverMovieResponse.DiscoverMovie> discoverMovies,
-                                Context context) {
-
-        this.discoverMovies = discoverMovies;
-        this.mContext = context;
+    public DiscoverTVAdapter(RecyclerView recyclerView,
+                             ArrayList<DiscoverTVResponse.DiscoverTV> discoverTVs, Context mContext) {
+        this.discoverTVs = discoverTVs;
+        this.mContext = mContext;
 
         final GridLayoutManager gridLayoutManager = (GridLayoutManager)recyclerView.getLayoutManager();
 
@@ -51,7 +47,7 @@ public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdap
 
                     if(!isLoading && currentTotalCount<=lastItem+visibleThreshold){
                         if(onLoadMoreListener!=null){
-                            onLoadMoreListener.onLoadMoreDiscoverMovies();
+                            onLoadMoreListener.onLoadMoreDiscoverTVs();
                         }
                         isLoading=true;
                     }
@@ -65,41 +61,41 @@ public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdap
     }
 
     @Override
-    public DiscoverMovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(mContext).inflate(R.layout.discover_movie_item,parent,false);
-        return new DiscoverMovieViewHolder(itemView);
+    public DiscoverTVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.discover_tv_item,parent,false);
+        return new DiscoverTVViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(DiscoverMovieViewHolder holder, int position) {
-        DiscoverMovieResponse.DiscoverMovie discoverMovie = discoverMovies.get(position);
+    public void onBindViewHolder(DiscoverTVViewHolder holder, int position) {
+        DiscoverTVResponse.DiscoverTV discoverTV = discoverTVs.get(position);
         Picasso.with(mContext)
-                .load(imageBaseURL+discoverMovie.getPoster_path())
+                .load(imageBaseURL+discoverTV.getPoster_path())
                 .placeholder(R.drawable.index)
                 .into(holder.posterIV);
     }
 
     @Override
     public int getItemCount() {
-        return discoverMovies.size();
+        return discoverTVs.size();
     }
 
     public void setLoaded(){
         isLoading=false;
     }
 
-    public class DiscoverMovieViewHolder extends RecyclerView.ViewHolder{
+    public class DiscoverTVViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView posterIV;
 
-        public DiscoverMovieViewHolder(View itemView) {
+        public DiscoverTVViewHolder(View itemView) {
             super(itemView);
-            posterIV = (ImageView)itemView.findViewById(R.id.discoverMovieIV);
+            posterIV = (ImageView)itemView.findViewById(R.id.discoverTVIV);
         }
+
     }
 
     interface OnLoadMoreListener{
-        void onLoadMoreDiscoverMovies();
+        void onLoadMoreDiscoverTVs();
     }
-
 }

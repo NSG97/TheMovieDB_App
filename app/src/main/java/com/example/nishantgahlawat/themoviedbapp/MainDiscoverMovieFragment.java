@@ -63,13 +63,14 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
     }
 
     private void loadInitialDiscoverPage() {
+        page=0;
         mProgressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = AbstractAPI.getRetrofitInstance();
 
         APIInterface apiInterface = retrofit.create(APIInterface.class);
 
-        Call<DiscoverMovieResponse> call = apiInterface.getDiscoverMovies(++page);
+        Call<DiscoverMovieResponse> call = apiInterface.getDiscoverMovies(++page, getString(R.string.api_key));
 
         call.enqueue(new Callback<DiscoverMovieResponse>() {
             @Override
@@ -96,7 +97,7 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
 
             APIInterface apiInterface = retrofit.create(APIInterface.class);
 
-            Call<DiscoverMovieResponse> call = apiInterface.getDiscoverMovies(++page);
+            Call<DiscoverMovieResponse> call = apiInterface.getDiscoverMovies(++page,getString(R.string.api_key));
 
             call.enqueue(new Callback<DiscoverMovieResponse>() {
                 @Override

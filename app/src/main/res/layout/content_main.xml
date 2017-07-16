@@ -8,9 +8,4 @@
     tools:context="com.example.nishantgahlawat.themoviedbapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
 </android.support.constraint.ConstraintLayout>

@@ -3,6 +3,11 @@ package com.example.nishantgahlawat.themoviedbapp;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -22,104 +27,76 @@ import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements DiscoverMovieAdapter.OnLoadMoreListener {
+public class MainActivity extends AppCompatActivity {
 
     public static final String API_KEY = "8b41c974ebd7764fd527b8c0b42f651c";
     private static final String TAG = "MainActivityTAG";
 
-    RecyclerView mRecyclerView;
-    ArrayList<DiscoverMovieResponse.DiscoverMovie> mDiscoverMovies;
-    DiscoverMovieAdapter mAdapter;
-    ProgressBar mProgressBar;
-
-    private int page=0;
-    private int total_pages;
+    private TabLayout mTabs;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.mainRecyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mDiscoverMovies = new ArrayList<>();
-        mAdapter = new DiscoverMovieAdapter(mRecyclerView,mDiscoverMovies,this);
-        mRecyclerView.setAdapter(mAdapter);
+        mViewPager = (ViewPager)findViewById(R.id.mainViewPager);
+        setupViewPager(mViewPager);
 
-        mProgressBar = (ProgressBar)findViewById(R.id.mainProgressBar);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mTabs = (TabLayout)findViewById(R.id.mainTabs);
+        mTabs.setupWithViewPager(mViewPager);
 
-        loadInitialDiscoverPage();
-
-        mAdapter.setOnLoadMoreListener(this);
     }
 
-    private void loadInitialDiscoverPage() {
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        Retrofit retrofit = AbstractAPI.getRetrofitInstance();
-
-        APIInterface apiInterface = retrofit.create(APIInterface.class);
-
-        Call<DiscoverMovieResponse> call = apiInterface.getDiscoverMovies(++page);
-
-        call.enqueue(new Callback<DiscoverMovieResponse>() {
-            @Override
-            public void onResponse(Call<DiscoverMovieResponse> call, Response<DiscoverMovieResponse> response) {
-                DiscoverMovieResponse movieResponse = response.body();
-                total_pages=movieResponse.getTotal_pages();
-                mDiscoverMovies.addAll(movieResponse.getResults());
-                mAdapter.notifyItemRangeInserted(0,mDiscoverMovies.size());
-                mProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<DiscoverMovieResponse> call, Throwable t) {
-            }
-        });
+    private void setupViewPager(ViewPager mViewPager) {
+        MainViewPagerAdapter adapter = new MainViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new MainDiscoverMovieFragment(),"Movies");
+        adapter.addFragment(new MainDiscoverTVFragment(),"TV Shows");
+        mViewPager.setAdapter(adapter);
     }
 
-    @Override
-    public void onLoadMoreDiscoverMovies() {
-        if(page<=total_pages){
-            mProgressBar.setVisibility(View.VISIBLE);
+    class MainViewPagerAdapter extends FragmentPagerAdapter{
 
-            Retrofit retrofit = AbstractAPI.getRetrofitInstance();
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-            APIInterface apiInterface = retrofit.create(APIInterface.class);
+        public MainViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-            Call<DiscoverMovieResponse> call = apiInterface.getDiscoverMovies(++page);
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
 
-            call.enqueue(new Callback<DiscoverMovieResponse>() {
-                @Override
-                public void onResponse(Call<DiscoverMovieResponse> call, Response<DiscoverMovieResponse> response) {
-                    DiscoverMovieResponse movieResponse = response.body();
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
 
-                    int positionStart = mDiscoverMovies.size();
+        public void addFragment(Fragment fragment,String title){
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
 
-                    mDiscoverMovies.addAll(movieResponse.getResults());
-                    mAdapter.notifyItemRangeInserted(positionStart,movieResponse.getResults().size());
-                    mAdapter.setLoaded();
-
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onFailure(Call<DiscoverMovieResponse> call, Throwable t) {
-                }
-            });
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

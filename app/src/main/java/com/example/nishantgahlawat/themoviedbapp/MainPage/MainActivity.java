@@ -1,46 +1,37 @@
-package com.example.nishantgahlawat.themoviedbapp;
+package com.example.nishantgahlawat.themoviedbapp.MainPage;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
-import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
-import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
+import com.example.nishantgahlawat.themoviedbapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
 public class MainActivity extends AppCompatActivity {
 
-    public static final String API_KEY = "8b41c974ebd7764fd527b8c0b42f651c";
     private static final String TAG = "MainActivityTAG";
 
     private TabLayout mTabs;
     private ViewPager mViewPager;
+    private FloatingActionButton fab;
+
+    private MainDiscoverMovieFragment discoverMovieFragment;
+    private MainDiscoverTVFragment discoverTVFragment;
+
+    private int selectedTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +43,66 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("TheMovieDB - Discover");
 
         mViewPager = (ViewPager)findViewById(R.id.mainViewPager);
+
+        fab = (FloatingActionButton) findViewById(R.id.mainFAB);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedTab==0){
+                    discoverMovieFragment.scrollToTop();
+                }
+                else if(selectedTab==1){
+                    discoverTVFragment.scrollToTop();
+                }
+            }
+        });
+
         setupViewPager(mViewPager);
 
         mTabs = (TabLayout)findViewById(R.id.mainTabs);
         mTabs.setupWithViewPager(mViewPager);
 
+        setupTabIcons();
+
+        mTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                selectedTab = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
+    private void setupTabIcons() {
+        TextView textViewMovies = (TextView) LayoutInflater.from(this).inflate(R.layout.tab_layout,null);
+        textViewMovies.setText("Movies");
+        textViewMovies.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_movie_black_24dp,0,0,0);
+        mTabs.getTabAt(0).setCustomView(textViewMovies);
+
+        TextView textViewTV = (TextView) LayoutInflater.from(this).inflate(R.layout.tab_layout,null);
+        textViewTV.setText("TV Shows");
+        textViewTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tv_black_24dp,0,0,0);
+        mTabs.getTabAt(1).setCustomView(textViewTV);
     }
 
     private void setupViewPager(ViewPager mViewPager) {
         MainViewPagerAdapter adapter = new MainViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MainDiscoverMovieFragment(),"Movies");
-        adapter.addFragment(new MainDiscoverTVFragment(),"TV Shows");
+
+        discoverMovieFragment = new MainDiscoverMovieFragment();
+        discoverMovieFragment.setFab(fab);
+        adapter.addFragment(discoverMovieFragment ,"Movies");
+
+        discoverTVFragment = new MainDiscoverTVFragment();
+        discoverTVFragment.setFab(fab);
+        adapter.addFragment(discoverTVFragment,"TV Shows");
+
         mViewPager.setAdapter(adapter);
     }
 

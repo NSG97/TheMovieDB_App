@@ -1,7 +1,5 @@
 package com.example.nishantgahlawat.themoviedbapp.API_Response;
 
-import com.example.nishantgahlawat.themoviedbapp.MainActivity;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -18,4 +16,7 @@ public interface APIInterface {
 
     @GET("discover/tv")
     Call<DiscoverTVResponse> getDiscoverTVs(@Query("page") int page,@Query("api_key")String key);
+
+    @GET("movie/{movie_id}/images")
+    Call<ImageResponse> getImages(@Path("movie_id") int id,@Query("api_key") String key);
 }

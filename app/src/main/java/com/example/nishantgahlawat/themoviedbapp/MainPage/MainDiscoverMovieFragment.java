@@ -1,7 +1,9 @@
-package com.example.nishantgahlawat.themoviedbapp;
+package com.example.nishantgahlawat.themoviedbapp.MainPage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,10 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
+import com.example.nishantgahlawat.themoviedbapp.IntentConstraints;
+import com.example.nishantgahlawat.themoviedbapp.MainPage.DiscoverMovieAdapter;
+import com.example.nishantgahlawat.themoviedbapp.MovieDetails.MovieDetailsActivity;
+import com.example.nishantgahlawat.themoviedbapp.R;
 
 import java.util.ArrayList;
 
@@ -32,6 +39,7 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
     ArrayList<DiscoverMovieResponse.DiscoverMovie> mDiscoverMovies;
     DiscoverMovieAdapter mAdapter;
     ProgressBar mProgressBar;
+    FloatingActionButton fab;
 
     private int page=0;
     private int total_pages;
@@ -39,9 +47,13 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
     public MainDiscoverMovieFragment() {
     }
 
+    public void setFab(FloatingActionButton fab) {
+        this.fab = fab;
+    }
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_discover_movie_fragment,container,false);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.discoverMovieFragmentRV);
@@ -49,8 +61,28 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mDiscoverMovies = new ArrayList<>();
-        mAdapter = new DiscoverMovieAdapter(mRecyclerView,mDiscoverMovies,getContext());
+        mAdapter = new DiscoverMovieAdapter(mRecyclerView, mDiscoverMovies, getContext(), new DiscoverMovieAdapter.DiscoverMovieClickListener() {
+            @Override
+            public void onDMovieItemClick(int position) {
+                Intent intent = new Intent(getContext(), MovieDetailsActivity.class);
+                intent.putExtra(IntentConstraints.MOVIE_ID,mDiscoverMovies.get(position).getId());
+                intent.putExtra("MovieName",mDiscoverMovies.get(position).getOriginal_title());
+                startActivity(intent);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy>0){
+                    fab.hide();
+                }
+                else if(dy<0){
+                    fab.show();
+                }
+            }
+        });
 
         mProgressBar = (ProgressBar)view.findViewById(R.id.discoverMovieFragmentPB);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -118,5 +150,9 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
                 }
             });
         }
+    }
+
+    public void scrollToTop(){
+        mRecyclerView.scrollToPosition(0);
     }
 }

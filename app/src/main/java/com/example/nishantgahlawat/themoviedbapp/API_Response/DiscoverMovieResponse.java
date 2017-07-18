@@ -12,15 +12,26 @@ public class DiscoverMovieResponse {
     private int total_pages;
     private ArrayList<DiscoverMovie> results;
 
-    public DiscoverMovieResponse(int page, int total_results, int total_pages, ArrayList<DiscoverMovie> results) {
-        this.page = page;
-        this.total_results = total_results;
-        this.total_pages = total_pages;
-        this.results = results;
-    }
-
     public static class DiscoverMovie{
         private String poster_path;
+        private String original_title;
+        private int id;
+
+        public String getOriginal_title() {
+            return original_title;
+        }
+
+        public void setOriginal_title(String original_title) {
+            this.original_title = original_title;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public String getPoster_path() {
             return poster_path;

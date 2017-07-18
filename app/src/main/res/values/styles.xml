@@ -15,6 +15,12 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="TextAppearance.AppCompat.AppBarMovieDetails" parent="">
+        <item name="android:gravity">bottom|left</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

@@ -1,7 +1,8 @@
-package com.example.nishantgahlawat.themoviedbapp;
+package com.example.nishantgahlawat.themoviedbapp.MainPage;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,8 +15,9 @@ import android.widget.ProgressBar;
 
 import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
-import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverTVResponse;
+import com.example.nishantgahlawat.themoviedbapp.MainPage.DiscoverTVAdapter;
+import com.example.nishantgahlawat.themoviedbapp.R;
 
 import java.util.ArrayList;
 
@@ -34,11 +36,16 @@ public class MainDiscoverTVFragment extends Fragment implements DiscoverTVAdapte
     ArrayList<DiscoverTVResponse.DiscoverTV> mDiscoverTVs;
     DiscoverTVAdapter mAdapter;
     ProgressBar mProgressBar;
+    FloatingActionButton fab;
 
     private int page=0;
     private int total_pages;
 
     public MainDiscoverTVFragment() {
+    }
+
+    public void setFab(FloatingActionButton fab) {
+        this.fab = fab;
     }
 
     @Nullable
@@ -50,12 +57,26 @@ public class MainDiscoverTVFragment extends Fragment implements DiscoverTVAdapte
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mProgressBar = (ProgressBar)view.findViewById(R.id.discoverTVFragmentPB);
-        mProgressBar.setVisibility(View.INVISIBLE);
-
         mDiscoverTVs = new ArrayList<>();
         mAdapter = new DiscoverTVAdapter(mRecyclerView,mDiscoverTVs,getContext());
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy>0){
+                    fab.hide();
+                }
+                else if(dy<0){
+                    fab.show();
+                }
+            }
+        });
+
+
+
+        mProgressBar = (ProgressBar)view.findViewById(R.id.discoverTVFragmentPB);
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         loadInitialDiscoverPage();
 
@@ -121,5 +142,9 @@ public class MainDiscoverTVFragment extends Fragment implements DiscoverTVAdapte
                 }
             });
         }
+    }
+
+    public void scrollToTop(){
+        mRecyclerView.scrollToPosition(0);
     }
 }

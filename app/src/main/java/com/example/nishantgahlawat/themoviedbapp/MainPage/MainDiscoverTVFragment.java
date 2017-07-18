@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
-import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
+import com.example.nishantgahlawat.themoviedbapp.API_Response.API_Configuration;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverTVResponse;
-import com.example.nishantgahlawat.themoviedbapp.MainPage.DiscoverTVAdapter;
 import com.example.nishantgahlawat.themoviedbapp.R;
 
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class MainDiscoverTVFragment extends Fragment implements DiscoverTVAdapte
         page=0;
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Retrofit retrofit = AbstractAPI.getRetrofitInstance();
+        Retrofit retrofit = API_Configuration.getRetrofitInstance();
 
         APIInterface apiInterface = retrofit.create(APIInterface.class);
 
@@ -117,7 +116,7 @@ public class MainDiscoverTVFragment extends Fragment implements DiscoverTVAdapte
         if(page<=total_pages){
             mProgressBar.setVisibility(View.VISIBLE);
 
-            Retrofit retrofit = AbstractAPI.getRetrofitInstance();
+            Retrofit retrofit = API_Configuration.getRetrofitInstance();
 
             APIInterface apiInterface = retrofit.create(APIInterface.class);
 

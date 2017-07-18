@@ -3,27 +3,21 @@ package com.example.nishantgahlawat.themoviedbapp.MovieDetails;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
-import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
+import com.example.nishantgahlawat.themoviedbapp.API_Response.API_Configuration;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.ImageResponse;
 import com.example.nishantgahlawat.themoviedbapp.IntentConstraints;
 import com.example.nishantgahlawat.themoviedbapp.R;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,10 +53,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         backdrops = new ArrayList<>();
 
         mPager = (ViewPager)findViewById(R.id.movieDetailsViewPager);
-        CircleIndicator circleIndicator = (CircleIndicator) findViewById(R.id.movieDetailsCircles);
-        circleIndicator.setViewPager(mPager);
 
         initSlides();
+
+        TabLayout mTabs = (TabLayout)findViewById(R.id.movieDetailsCirclesTab);
+        mTabs.setupWithViewPager(mPager);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.movieDetailsFAB);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +70,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void initSlides() {
-        Retrofit retrofit = AbstractAPI.getRetrofitInstance();
+        Retrofit retrofit = API_Configuration.getRetrofitInstance();
 
         APIInterface apiInterface = retrofit.create(APIInterface.class);
 

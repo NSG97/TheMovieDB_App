@@ -1,13 +1,13 @@
 package com.example.nishantgahlawat.themoviedbapp.MovieDetails;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.nishantgahlawat.themoviedbapp.API_Response.API_Configuration;
 import com.example.nishantgahlawat.themoviedbapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class SlideAdapter extends PagerAdapter {
 
-    public static final String imageBaseURL = "https://image.tmdb.org/t/p/w780";
 
     private ArrayList<String> mBackdrops;
     private Context mContext;
@@ -45,7 +44,7 @@ public class SlideAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) slideLayout.findViewById(R.id.slideImageView);
 
         Picasso.with(mContext)
-                .load(imageBaseURL+mBackdrops.get(position))
+                .load(API_Configuration.IMAGE_BASE_URL+mBackdrops.get(position))
                 .placeholder(R.drawable.index2)
                 .into(imageView);
 

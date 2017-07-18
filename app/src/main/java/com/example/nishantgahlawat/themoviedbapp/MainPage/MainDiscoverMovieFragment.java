@@ -12,13 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.nishantgahlawat.themoviedbapp.API_Response.APIInterface;
-import com.example.nishantgahlawat.themoviedbapp.API_Response.AbstractAPI;
+import com.example.nishantgahlawat.themoviedbapp.API_Response.API_Configuration;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
 import com.example.nishantgahlawat.themoviedbapp.IntentConstraints;
-import com.example.nishantgahlawat.themoviedbapp.MainPage.DiscoverMovieAdapter;
 import com.example.nishantgahlawat.themoviedbapp.MovieDetails.MovieDetailsActivity;
 import com.example.nishantgahlawat.themoviedbapp.R;
 
@@ -98,7 +96,7 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
         page=0;
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Retrofit retrofit = AbstractAPI.getRetrofitInstance();
+        Retrofit retrofit = API_Configuration.getRetrofitInstance();
 
         APIInterface apiInterface = retrofit.create(APIInterface.class);
 
@@ -125,7 +123,7 @@ public class MainDiscoverMovieFragment extends Fragment implements DiscoverMovie
         if(page<=total_pages){
             mProgressBar.setVisibility(View.VISIBLE);
 
-            Retrofit retrofit = AbstractAPI.getRetrofitInstance();
+            Retrofit retrofit = API_Configuration.getRetrofitInstance();
 
             APIInterface apiInterface = retrofit.create(APIInterface.class);
 

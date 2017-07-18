@@ -20,20 +20,15 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/movieDetailsViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <!--<View
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@drawable/scrim_top"
-                app:layout_collapseMode="pin"/>-->
-
             <View
+                android:id="@+id/movieDetailsScrim"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:background="@drawable/scrim_bottom"
@@ -46,18 +41,20 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+            <android.support.design.widget.TabLayout
+                android:id="@+id/movieDetailsCirclesTab"
+                app:tabBackground="@drawable/tab_selector"
+                android:layout_gravity="bottom"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_movie_details" />
-
-    <me.relex.circleindicator.CircleIndicator
-        android:id="@+id/movieDetailsCircles"
-        app:layout_anchor="@id/movieDetailsViewPager"
-        app:layout_anchorGravity="bottom|end"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_gravity="bottom"/>
 
 
     <!--<android.support.design.widget.FloatingActionButton

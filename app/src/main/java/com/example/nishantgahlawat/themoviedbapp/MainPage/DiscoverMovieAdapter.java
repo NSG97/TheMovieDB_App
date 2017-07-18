@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.nishantgahlawat.themoviedbapp.API_Response.API_Configuration;
 import com.example.nishantgahlawat.themoviedbapp.API_Response.DiscoverMovieResponse;
 import com.example.nishantgahlawat.themoviedbapp.R;
 import com.squareup.picasso.Picasso;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdapter.DiscoverMovieViewHolder> {
 
     public static final String TAG = "DiscoverMovieAdapterTAG";
-    public static final String imageBaseURL = "https://image.tmdb.org/t/p/w500";
 
     private ArrayList<DiscoverMovieResponse.DiscoverMovie> discoverMovies;
     private Context mContext;
@@ -75,7 +75,7 @@ public class DiscoverMovieAdapter extends RecyclerView.Adapter<DiscoverMovieAdap
     public void onBindViewHolder(DiscoverMovieViewHolder holder, int position) {
         DiscoverMovieResponse.DiscoverMovie discoverMovie = discoverMovies.get(position);
         Picasso.with(mContext)
-                .load(imageBaseURL+discoverMovie.getPoster_path())
+                .load(API_Configuration.IMAGE_BASE_URL+discoverMovie.getPoster_path())
                 .placeholder(R.drawable.index)
                 .into(holder.posterIV);
     }
